@@ -42,7 +42,7 @@ contract AegisWallet is Ownable, ReentrancyGuard {
      */
     function execute(address target, uint256 value, bytes calldata data) external payable nonReentrant {
         // 1. Identity Check
-        require(aegisID.balanceOf(msg.sender) > 0 || msg.sender == owner(), "AegisWallet: Caller not verified Agent or Owner");
+        require(aegisID.balanceOf(msg.sender) > 0, "AegisWallet: Caller not verified Agent");
 
         // 2. Budget Check
         if (address(rulesContract) != address(0)) {
@@ -62,7 +62,7 @@ contract AegisWallet is Ownable, ReentrancyGuard {
      */
     function executeERC20(address token, address to, uint256 amount) external nonReentrant {
         // 1. Identity Check
-        require(aegisID.balanceOf(msg.sender) > 0 || msg.sender == owner(), "AegisWallet: Caller not verified Agent or Owner");
+        require(aegisID.balanceOf(msg.sender) > 0, "AegisWallet: Caller not verified Agent");
 
         // 2. Budget Check (Count token amount as spend)
         // Note: For production, we need an Oracle to convert Token->USD for unified limits.

@@ -15,6 +15,9 @@ use aegis_fintech_v1::agent;
 
 use tower_http::cors::CorsLayer;
 
+use tower::{ServiceBuilder, limit::RateLimitLayer};
+use std::time::Duration;
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok();
@@ -46,15 +49,27 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         chain: std::sync::Arc::new(chain_client),
     };
 
+    // Middleware: Rate Limit (100 req/sec) & Strict CORS
+    let cors = CorsLayer::new()
+        .allow_origin(["http://localhost:3000".parse().unwrap(), "http://127.0.0.1:3000".parse().unwrap()])
+        .allow_methods(tower_http::cors::Any)
+        .allow_headers(tower_http::cors::Any);
+
+use axum::middleware;
+
     let app = Router::new()
         .route("/health", get(health_check))
-        .nest("/api/compliance", compliance::router())
-        .nest("/api/finance", finance::router())
-        .nest("/api/governance", governance::router())
-        .nest("/api/agent", agent::router())
+        .nest("/api/compliance", compliance::router().route_layer(middleware::from_extractor::<aegis_fintech_v1::auth::Claims>()))
+        .nest("/api/finance", finance::router().route_layer(middleware::from_extractor::<aegis_fintech_v1::auth::Claims>()))
+        .nest("/api/governance", governance::router().route_layer(middleware::from_extractor::<aegis_fintech_v1::auth::Claims>()))
+        .nest("/api/agent", agent::router().route_layer(middleware::from_extractor::<aegis_fintech_v1::auth::Claims>()))
         .nest("/api/auth", aegis_fintech_v1::auth::router())
         .with_state(state)
-        .layer(CorsLayer::permissive());
+        .layer(
+            ServiceBuilder::new()
+                .layer(RateLimitLayer::new(100, Duration::from_secs(1)))
+                .layer(cors)
+        );
 
     let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
     println!(">> Aegis Core v0.1.0 active at http://{}", addr);

@@ -18,6 +18,7 @@ pub fn router() -> Router<AppState> {
 }
 
 // Extractor for JWT
+#[derive(Clone)]
 pub struct Claims(pub models::Claims);
 
 #[async_trait]
