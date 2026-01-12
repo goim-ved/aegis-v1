@@ -36,9 +36,9 @@ graph TD
     
     subgraph "On-Chain Protocol Layer"
     Blockchain
-    SBT[AegisID (Soulbound Token)]
-    Rules[AegisRules (Policy Engine)]
-    Wallet[AegisWallet (Multisig)]
+    SBT["AegisID (Soulbound Token)"]
+    Rules["AegisRules (Policy Engine)"]
+    Wallet["AegisWallet (Multisig)"]
     end
     
     subgraph "Off-Chain Secure Zone"
