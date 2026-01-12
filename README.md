@@ -1,41 +1,44 @@
-# 🛡️ AEGIS FINTECH V1
+# Aegis Fintech V1
 
-> **Status:** 🟢 **Pilot Ready / Reference Implementation**  
-> *Next-Generation Compliance Infrastructure for DeFi*
+> **Status:** Pilot Ready / Reference Implementation
+>
+> **Description:** Next-Generation Compliance Infrastructure for Decentralized Finance (DeFi)
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Rust](https://img.shields.io/badge/backend-Rust-orange.svg) ![Next.js](https://img.shields.io/badge/frontend-Next.js_16-black.svg) ![Solidity](https://img.shields.io/badge/contracts-Solidity-363636.svg)
 
 ---
 
-## 📖 Executive Summary
+## Executive Summary
 
-**Aegis Fintech V1** (formerly PROXY) is a digital "Compliance Guardrail" designed to bridge traditional banking standards with decentralized finance (DeFi). 
+**Aegis Fintech V1** is a compliant financial infrastructure layer designed to bridge traditional banking standards with permissionless blockchain networks. 
 
-In the current "wild west" of crypto, ensuring **Know-Your-Customer (KYC)** compliance and **Anti-Money Laundering (AML)** checks is difficult. Aegis solves this by introducing a **Soulbound Token (SBT)** architectue. Legal entities are verified off-chain, and then issued a non-transferable identity token on-chain. This allows smart contracts to enforce regulatory rules programmatically (e.g., "Only allow transactions from Verified US Investors").
+The primary challenge in institutional DeFi is ensuring strict adherence to **Know-Your-Customer (KYC)** and **Anti-Money Laundering (AML)** regulations without compromising the efficiency of smart contracts. Aegis addresses this by introducing a **Soulbound Token (SBT)** architecture where legal identity verification is performed off-chain, and a non-transferable identity token is issued on-chain. This enables smart contracts to enforce regulatory compliance programmatically at the transaction level.
 
-### 🎯 Key Capabilities
-*   **Identity Verification**: Onboard verified entities and issue Soulbound Tokens (SBTs).
-*   **Regulatory Guardrails**: On-chain and off-chain rule engines to reject non-compliant transactions.
-*   **Bank-Grade Security**: High-performance Rust backend using Axum and SQLx.
-*   **Modern Dashboard**: A reactive, premium UI built with Next.js 16 and Tailwind CSS v4.
+### Key Capabilities
+*   **Identity Verification:** Automated onboarding of verified legal entities via Soulbound Tokens.
+*   **Regulatory Guardrails:** Hybrid rule engine enforcing compliance both on-chain (smart contracts) and off-chain (API).
+*   **Bank-Grade Security:** High-performance Rust backend leveraging strict type safety and memory security.
+*   **Institutional Dashboard:** A responsive, professional interface for treasury management and compliance oversight.
 
 ---
 
-## 🏗️ Architecture
+## System Architecture
 
-Aegis follows a hybrid **Web 2.5** architecture, keeping sensitive data (PII) in a secure off-chain database while using the blockchain for public trust and settlement.
+Aegis implements a **Web 2.5** hybrid architecture. Sensitive Personally Identifiable Information (PII) is isolated in a secure off-chain vault, while cryptographic proofs of identity are utilized on the public blockchain.
 
 ```mermaid
 graph TD
     User[User / Admin] -->|HTTPS| Frontend[Next.js Dashboard]
-    Frontend -->|JSON/REST| Backend[Rust API (Axum)]
+    Frontend -->|JSON/REST| Backend[Rust API Service]
     Backend -->|SQL| DB[(PostgreSQL Vault)]
-    Backend -->|RPC| Blockchain[Ethereum / Hardhat Node]
+    Backend -->|RPC| Blockchain[Ethereum Network]
     Blockchain -->|Events| Backend
     
-    subgraph "On-Chain World"
+    subgraph "On-Chain Protocol Layer"
     Blockchain
-    SBT[Soulbound Identity Token]
+    SBT[AegisID (Soulbound Token)]
+    Rules[AegisRules (Policy Engine)]
+    Wallet[AegisWallet (Multisig)]
     end
     
     subgraph "Off-Chain Secure Zone"
@@ -44,91 +47,94 @@ graph TD
     end
 ```
 
+### Security Model
+1.  **Data Sovereignty:** PII is never stored on-chain. Only opaque identity hashes and status flags are committed to the ledger.
+2.  **Role-Based Access Control (RBAC):** The system uses a granular permission model.
+    *   **Admin:** Can upgrade contracts and update global policy.
+    *   **Compliance Officer:** Can revoke identity tokens or flag suspicious wallets.
+    *   **Agent:** Can execute treasury transactions within defined daily limits.
+3.  **Circuit Breakers:** The `AegisRules` contract acts as an on-chain firewall, automatically rejecting transactions that exceed daily volume limits or originate from unverified addresses.
+
 ---
 
-## 🛠️ Tech Stack
+## Technical Stack
 
-### Service Layer (Backend)
-*   **Language**: Rust (Edition 2021)
-*   **Framework**: [Axum 0.7](https://github.com/tokio-rs/axum)
-*   **Database**: PostgreSQL with [SQLx 0.7](https://github.com/launchbadge/sqlx)
-*   **Blockchain Client**: Ethers.rs 2.0
-*   **Security**: Argon2 for hashing, JWT for auth.
+### Infrastructure Layer (Backend)
+*   **Language:** Rust (Edition 2021)
+*   **Server Framework:** Axum 0.7 (Tokio Runtime)
+*   **Persistence:** PostgreSQL with SQLx 0.7 (Compile-time checked queries)
+*   **Blockchain Integration:** Ethers.rs 2.0
+*   **Authentication:** Argon2 hashing for credentials, JWT for session management.
 
-### User Interface (Frontend - `dashboard/`)
-*   **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
-*   **Language**: TypeScript
-*   **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) & Tailwind Merge
-*   **Motion**: Framer Motion 12
-*   **Icons**: Lucide React
+### Interface Layer (Frontend)
+*   **Framework:** Next.js 16 (React Server Components)
+*   **Language:** TypeScript
+*   **Styling:** Tailwind CSS v4
+*   **State Management:** Server Actions + React Hooks
 
 ### Protocol Layer (Smart Contracts)
-*   **Language**: Solidity
-*   **Framework**: Hardhat
-*   **Standard**: ERC-721 / Soulbound Implementation (OpenZeppelin)
+*   **Language:** Solidity 0.8+
+*   **Framework:** Hardhat
+*   **Standards:** ERC-721 (Modified for Soulbound properties), AccessControl
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
- For a detailed step-by-step guide including command line outputs, please refer to [QUICKSTART.md](QUICKSTART.md).
+ For a comprehensive deployment guide, please refer to [QUICKSTART.md](QUICKSTART.md).
 
 ### Prerequisites
-*   **Docker Desktop** (Running)
-*   **Node.js 18+**
-*   **Git**
+*   Docker Desktop (Active)
+*   Node.js 18+
+*   Git
 
-### 1️⃣ Start the Local Blockchain
-In your first terminal:
+### 1. Initialize Local Blockchain
+Start a local Ethereum node to simulate the blockchain environment.
 ```powershell
 npx hardhat node
 ```
-*Creates a local Ethereum network with seeded accounts.*
 
-### 2️⃣ Deploy Contracts & Start Infrastructure
-In a second terminal:
+### 2. Deploy Infrastructure
+In a separate terminal, deploy the smart contracts and start the application stack.
 ```powershell
-# Deploy Smart Contracts
+# Deploy Smart Contracts to Localhost
 npx hardhat run scripts/deploy.js --network localhost
 
-# Start Backend, DB, and Frontend
+# Start Backend API, Database, and Frontend
 docker-compose up --build
 ```
 
-### 3️⃣ Verify System
-Once running, the services will be available at:
-*   **Frontend**: [http://localhost:3001](http://localhost:3001)
-*   **Backend API**: [http://localhost:8080](http://localhost:8080)
-*   **Database**: Port 5432
+### 3. Verification
+Access the services at the following endpoints:
+*   **Frontend Dashboard:** [http://localhost:3001](http://localhost:3001)
+*   **Backend API:** [http://localhost:8080](http://localhost:8080)
 
-**Default Admin Credentials:**
-*   You may need to register an admin user via API if the DB is fresh (see Quickstart Step 4).
-*   Standard Dev Creds: `admin` / `password123`
+**Default Credentials:**
+*   **Username:** `admin`
+*   **Password:** `password123`
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```bash
 AEGIS_FINTECH_V1/
-├── contracts/          # Solidity Smart Contracts (Identity, Access)
+├── contracts/          # Solidity Smart Contracts (Identity, Access, Governance)
 ├── dashboard/          # Next.js Frontend Application
 ├── scripts/            # Deployment & Maintenance Scripts
 ├── src/                # Rust Backend Application Code
 ├── GUIDES/             # Documentation & Guides
-├── docker-compose.yml  # Container Orchestration
-├── Cargo.toml          # Rust Dependencies
-└── hardhat.config.js   # Blockchain Development Config
+├── docker-compose.yml  # Container Orchestration Configuration
+├── Cargo.toml          # Rust Dependency Manifest
+└── hardhat.config.js   # Blockchain Development Configuration
 ```
 
 ---
 
-## ⚠️ Disclaimer
-This code is provided as a **Reference Implementation** for educational and portfolio purposes. While it uses production-grade tools (Rust, SQLx), it has **NOT** undergone a formal security audit. 
-
-**DO NOT use in a production environment with real funds without a comprehensive security review.**
+## Disclaimer
+This codebase is provided as a **Reference Implementation** for educational and research purposes. While it utilizes production-grade technologies, it has not undergone a formal third-party security audit. Do not use in production environments with real assets without a comprehensive security review.
 
 ---
 
-## 📜 License
-Distributed under the MIT License. See `LICENSE` for more information.
+## License
+Distributed under the MIT License. See `LICENSE` for details.
