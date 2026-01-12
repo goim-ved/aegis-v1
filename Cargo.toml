@@ -1,0 +1,18 @@
+[package]
+name = "aegis_fintech_v1"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = "0.7.5"
+tokio = { version = "1.0", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+sqlx = { version = "0.7", features = ["postgres", "runtime-tokio", "tls-native-tls", "chrono"] }
+dotenvy = "0.15"
+ethers = "2.0"
+jsonwebtoken = "9.2"
+argon2 = "0.5"
+axum-extra = { version = "0.9", features = ["typed-header"] }
+rand = "0.8"
+tower-http = { version = "0.5", features = ["cors"] }
+chrono = { version = "0.4", features = ["serde"] }

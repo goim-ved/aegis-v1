@@ -1,0 +1,40 @@
+
+
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: aegis_fintech
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  backend:
+    build: .
+    restart: always
+    ports:
+      - "8080:3000"
+    environment:
+      DATABASE_URL: postgres://postgres:password@db:5432/aegis_fintech
+      JWT_SECRET: super_secret_key_change_me_in_prod
+      RUST_LOG: info
+      RPC_URL: http://host.docker.internal:8545
+    depends_on:
+      - db
+
+  frontend:
+    build: ./dashboard
+    restart: always
+    ports:
+      - "3001:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8080/api
+    depends_on:
+      - backend
+
+volumes:
+  db-data:

@@ -1,0 +1,16 @@
+{
+  "name": "aegis_fintech_v1_contracts",
+  "version": "1.0.0",
+  "description": "Smart Contracts for Aegis Fintech V1",
+  "scripts": {
+    "test": "hardhat test",
+    "compile": "hardhat compile"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.19.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.0"
+  }
+}
