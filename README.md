@@ -123,7 +123,7 @@ AEGIS_FINTECH_V1/
 ├── dashboard/          # Next.js Frontend Application
 ├── scripts/            # Deployment & Maintenance Scripts
 ├── src/                # Rust Backend Application Code
-├── GUIDES/             # Documentation & Guides
+
 ├── docker-compose.yml  # Container Orchestration Configuration
 ├── Cargo.toml          # Rust Dependency Manifest
 └── hardhat.config.js   # Blockchain Development Configuration
