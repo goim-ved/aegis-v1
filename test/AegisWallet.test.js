@@ -128,7 +128,7 @@ describe("AegisWallet Part 1: Financial Core", function () {
             const amount = ethers.parseEther("1.1"); // Above 1.0
             await expect(
                 wallet.connect(agent).execute(recipient.address, amount, "0x")
-            ).to.be.revertedWith("ProxyRules: Daily limit exceeded");
+            ).to.be.revertedWith("AegisRules: Daily limit exceeded");
         });
 
         it("Should enforce CUMULATIVE daily limits", async function () {
@@ -170,7 +170,7 @@ describe("AegisWallet Part 1: Financial Core", function () {
             const amount2 = ethers.parseEther("150.0");
             await expect(
                 wallet.connect(agent).executeERC20(await usdc.getAddress(), recipient.address, amount2)
-            ).to.be.revertedWith("ProxyRules: Daily limit exceeded");
+            ).to.be.revertedWith("AegisRules: Daily limit exceeded");
         });
     });
 });

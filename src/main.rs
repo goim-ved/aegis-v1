@@ -39,7 +39,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let chain_client = aegis_fintech_v1::chain::ChainClient::new(&rpc_url, &private_key, &contract_addr)
         .await
-        .expect("Failed to create chain client - ensure Hardhat node is running or vars are set");
+        .expect("Chain Client init failed. Is the Hardhat node running? (Check RPC_URL)");
 
     let state = AppState { 
         pool,
@@ -57,7 +57,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .layer(CorsLayer::permissive());
 
     let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
-    println!("listening on {}", addr);
+    println!(">> Aegis Core v0.1.0 active at http://{}", addr);
     
     let listener = tokio::net::TcpListener::bind(addr).await?;
     axum::serve(listener, app).await?;
@@ -66,10 +66,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 async fn health_check(State(state): State<AppState>) -> String {
-    // Simple check to see if DB is accessible (optional)
+    // Check DB connection - critical for startup
     match sqlx::query("SELECT 1").execute(&state.pool).await {
-        Ok(_) => "AEGIS_FINTECH_V1 SYSTEMS OPERATIONAL (DB CONNECTED)".to_string(),
-        Err(_) => "AEGIS_FINTECH_V1 SYSTEMS ERROR (DB DISCONNECTED)".to_string(),
+        Ok(_) => "System: Online (DB Connected)".to_string(),
+        Err(e) => format!("System: Degraded (DB Error: {})", e),
     }
 }
 

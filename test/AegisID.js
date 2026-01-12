@@ -7,16 +7,16 @@ describe("AegisID", function () {
         const AegisID = await ethers.getContractFactory("AegisID");
         const aegisId = await AegisID.deploy();
 
-        await proxyId.mint(owner.address, "http://example.com/token/1");
-        expect(await proxyId.tokenURI(0)).to.equal("http://example.com/token/1");
+        await aegisId.mint(owner.address, "http://example.com/token/1");
+        expect(await aegisId.tokenURI(0)).to.equal("http://example.com/token/1");
     });
 
     it("Should prevent transfers (Soulbound)", async function () {
         const [owner, otherAccount] = await ethers.getSigners();
-        const ProxyID = await ethers.getContractFactory("ProxyID");
-        const proxyId = await ProxyID.deploy();
+        const AegisID = await ethers.getContractFactory("AegisID");
+        const aegisId = await AegisID.deploy();
 
-        await proxyId.mint(owner.address, "http://example.com/token/1");
+        await aegisId.mint(owner.address, "http://example.com/token/1"); // Fixed variable reference
 
         // Attempt transfer
         await expect(

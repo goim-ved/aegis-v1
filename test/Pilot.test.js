@@ -2,9 +2,9 @@ const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
 describe("PILOT LAUNCH: End-to-End System Verification", function () {
-    let ProxyID, proxyID;
-    let ProxyRules, rules;
-    let ProxyWallet, wallet;
+    let AegisID, aegisID;
+    let AegisRules, rules;
+    let AegisWallet, wallet;
     let MockUSDC, usdc;
     let owner, agent, vendor, hacker;
 
@@ -22,15 +22,15 @@ describe("PILOT LAUNCH: End-to-End System Verification", function () {
     });
 
     describe("Phase 1: Infrastructure Deployment", function () {
-        it("1.1 Should deploy Identity Registry (ProxyID)", async function () {
-            const F = await ethers.getContractFactory("ProxyID");
-            proxyID = await F.deploy();
-            await proxyID.waitForDeployment();
-            expect(await proxyID.getAddress()).to.be.properAddress;
+        it("1.1 Should deploy Identity Registry (AegisID)", async function () {
+            const F = await ethers.getContractFactory("AegisID");
+            aegisID = await F.deploy();
+            await aegisID.waitForDeployment();
+            expect(await aegisID.getAddress()).to.be.properAddress;
         });
 
-        it("1.2 Should deploy Governance Rules (ProxyRules)", async function () {
-            const F = await ethers.getContractFactory("ProxyRules");
+        it("1.2 Should deploy Governance Rules (AegisRules)", async function () {
+            const F = await ethers.getContractFactory("AegisRules");
             rules = await F.deploy();
             await rules.waitForDeployment();
             expect(await rules.getAddress()).to.be.properAddress;
@@ -46,13 +46,13 @@ describe("PILOT LAUNCH: End-to-End System Verification", function () {
 
     describe("Phase 2: Agent Onboarding", function () {
         it("2.1 Should mint Identity to Agent", async function () {
-            await proxyID.mint(agent.address, "ipfs://legal-entity-v1");
-            expect(await proxyID.balanceOf(agent.address)).to.equal(1);
+            await aegisID.mint(agent.address, "ipfs://legal-entity-v1");
+            expect(await aegisID.balanceOf(agent.address)).to.equal(1);
         });
 
-        it("2.2 Should deploy ProxyWallet for Agent", async function () {
-            const F = await ethers.getContractFactory("ProxyWallet");
-            wallet = await F.deploy(await proxyID.getAddress());
+        it("2.2 Should deploy AegisWallet for Agent", async function () {
+            const F = await ethers.getContractFactory("AegisWallet");
+            wallet = await F.deploy(await aegisID.getAddress());
             await wallet.waitForDeployment();
             expect(await wallet.owner()).to.equal(owner.address); // Admin owns wallet initially
         });
@@ -137,13 +137,13 @@ describe("PILOT LAUNCH: End-to-End System Verification", function () {
                     vendor.address,
                     amount
                 )
-            ).to.be.revertedWith("ProxyRules: Daily limit exceeded");
+            ).to.be.revertedWith("AegisRules: Daily limit exceeded");
         });
 
         it("6.2 Should BLOCK unauthorized users (The Hacker)", async function () {
             await expect(
                 wallet.connect(hacker).execute(vendor.address, ethers.parseEther("0.1"), "0x")
-            ).to.be.revertedWith("ProxyWallet: Caller not verified Agent or Owner");
+            ).to.be.revertedWith("AegisWallet: Caller not verified Agent or Owner");
         });
 
         it("6.3 Should BLOCK Re-entrancy attacks (The Fortress)", async function () {

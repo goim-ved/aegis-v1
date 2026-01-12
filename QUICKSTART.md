@@ -15,7 +15,7 @@ This terminal runs your local copy of the Ethereum network.
 1. Open **Terminal 1**.
 2. Run the Hardhat Node:
    ```powershell
-   cd C:\PROJECTS\PROXY_FINTECH_V1
+   cd C:\PROJECTS\AEGIS_FINTECH_V1
    npx hardhat node
    ```
    *Keep this running. It will print "Started HTTP and WebSocket JSON-RPC server at..."*
@@ -28,7 +28,7 @@ You need to deploy the smart contract to your fresh local blockchain so the back
 1. Open **Terminal 2**.
 2. Run the deploy script:
    ```powershell
-   cd C:\PROJECTS\PROXY_FINTECH_V1
+   cd C:\PROJECTS\AEGIS_FINTECH_V1
    npx hardhat run scripts/deploy.js --network localhost
    ```
    *You should see: "AegisID deployed to: 0x5FbDB..."*
@@ -57,7 +57,7 @@ Now we create the initial administrator account.
    ```powershell
    curl http://localhost:8080/health
    ```
-   *Expected Output: `AEGIS_FINTECH_V1 SYSTEMS OPERATIONAL (DB CONNECTED)`*
+   *Expected Output: `System: Online (DB Connected)`*
 
 3. Register the Admin **(Copy this exact PowerShell command)**:
    ```powershell
